@@ -38,7 +38,7 @@ if($row = mysqli_fetch_array($result))
 {
 	$email = $row['email'];
 
-	$appendstr = 'http://localhost';
+	$appendstr = 'http://localhost/newlink.php';
 	$appendstr .= '?';
 	$appendstr .= $username;
 	$appendstr .= '&';   //separator
