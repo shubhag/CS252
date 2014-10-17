@@ -4,12 +4,28 @@
 </head>
 
 <body>
+	<h1> Hawa Hawai Bank </h1>
 	<form action="registration.php" method="post">
-		UserName: <input type="text" name="username"><br>
-		Password: <input type="password" name="password"><br>
+		<div>
+			<span >UserName:</span>
+			<span><input type="text" name="username" required> </span>
+			<br>
+		</div>
+		<div>
+			<span >Email:</span>
+			<span><input type="email" name="email" required></span>
+			<br>
+		</div>
+		<div>
+			<span >Password: </span>
+			<span><input type="password" name="password" required></span>
+			<br>
+		</div>
 		<input type="submit">
 	</form>
 
-
+	<p>
+		Already Registered. Click Here to <a href="login.html">Login</a>
+	</p>
 </body>
 </html>
