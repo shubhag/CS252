@@ -39,9 +39,9 @@ if($row = mysqli_fetch_array($result))
 	$email = $row['email'];
 
 	$appendstr = 'http://localhost/newlink.php';
-	$appendstr .= '?';
+	$appendstr .= '?uname=';
 	$appendstr .= $username;
-	$appendstr .= '&';   //separator
+	$appendstr .= '&str=';   //separator
 	$randstr = generateRandomString();
 	$appendstr .= $randstr;
 

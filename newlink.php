@@ -9,8 +9,13 @@
 
 
 <?php
-$username
-$randomstr
+    $parts = $_SERVER['QUERY_STRING'] ;
+    echo $parts ;
+    parse_str($parts['query'], $query);
+    echo $query['uname'];
+    echo $query['str'];
+$username = $query['uname'];
+$randomstr = $query['str'];
 
 $conn = mysqli_connect("localhost", "root", "root", "test");
 
