@@ -17,6 +17,8 @@ else {
 
 		$username= mysqli_real_escape_string($conn, $_POST['username']);
 		$password = $_POST['password'];
+		$email = $_POST['email'];
+
 
 		$sql = "SELECT username FROM register WHERE username='$username'";
 		$result = mysqli_query($conn, $sql);
@@ -24,8 +26,8 @@ else {
 
 		if(!($row = mysqli_fetch_array($result)))
 		{
-			$sql = "INSERT INTO register (username, password)
-			VALUES('$username', MD5('$password'))";
+			$sql = "INSERT INTO register (username, password, email)
+			VALUES('$username', MD5('$password'), '$email')";
 
 			if (mysqli_query($conn, $sql)){
 				echo "Registered";
