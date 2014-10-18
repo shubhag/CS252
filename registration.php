@@ -42,22 +42,33 @@ else {
 		   	echo "Invalid Email Address<br> Go back to <a href='registeration.html' >signup page</a>";
 		}
 		else{
-			$sql = "SELECT username FROM register WHERE username='$username'";
-			$result = mysqli_query($conn, $sql);
 
+			$sql = "SELECT * FROM register WHERE email='$email'";
+			$result1 = mysqli_query($conn, $sql);
 
-			if(!($row = mysqli_fetch_array($result)))
+			if(!($row1 = mysqli_fetch_array($result1)))
 			{
-				$sql = "INSERT INTO register (username, password, email)
-				VALUES('$username', MD5('$password'), '$email')";
+				$sql = "SELECT username FROM register WHERE username='$username'";
+				$result = mysqli_query($conn, $sql);
 
-				if (mysqli_query($conn, $sql)){
-					echo "User Registered. <br> Go to <a href='index_login.php'>Login Page</a>";
+
+				if(!($row = mysqli_fetch_array($result)))
+				{
+					$sql = "INSERT INTO register (username, password, email)
+					VALUES('$username', MD5('$password'), '$email')";
+
+					if (mysqli_query($conn, $sql)){
+						echo "User Registered. <br> Go to <a href='index_login.php'>Login Page</a>";
+					}
+				}
+				else
+				{
+					echo "User already exists. Please try a different username";
 				}
 			}
 			else
 			{
-				echo "User already exists. Please try a different username";
+				echo "Sorry. Email Already used. Try with another email";
 			}
 		}
 		mysqli_close($conn);
