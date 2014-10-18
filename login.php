@@ -2,11 +2,8 @@
 
 <head>
 <title>Welcome</title>
-<style type="text/css">
-
-</style>
+<link rel="stylesheet" type="text/css" href="main.css">
 </head>
-
 
 <body>
 <?php
@@ -38,7 +35,6 @@ else{
 				$password = $row['password'];
 				if (MD5($_POST['password']) == $password)
 				{
-					echo "LOGGED IN";
 					$_SESSION['username'] = $username;
 				}
 				else {echo "Incorrect password";}
@@ -51,43 +47,31 @@ else{
 
 ?>
 
-
-
 <?php
 if(isset($_SESSION['username']))
 {
 	$username = $_SESSION['username'];
 	//also retrieving the balance and account number
 	$sql = "SELECT * FROM register WHERE username = '$username'";
-	$result= mysqli_query($conn, $sql);
-	$row = mysqli_fetch_array($result);
-	$usraccount = $row['account']; echo $usraccount. "<br>";
-	$usrbalance = $row['balance']; echo $usrbalance. "<br>";
+
+	echo "<div class='tabs'>
+          <a href='#' id='tab1' class='tab active'>Details</a>
+          <a href='#' id='tab2' class='tab'>Dropdown</a>
+          <a href='#' id='tab3' class='tab'>Reset Password</a></div>" ;
+		$result= mysqli_query($conn, $sql);
+		$row = mysqli_fetch_array($result);
+		$usraccount = $row['account']; 
+		$usrbalance = $row['balance']; 
 
 	echo $_SESSION['username'];
-	echo "Welcome";
-	echo "
-<form action='upload_final.php' method='post'
-		enctype='multipart/form-data'>
-		<label for='file'>Filename:</label>
-		<input type=\"file\" name=\"file\" id=\"file\">
-		<input type='submit' name='submit' value='Submit'>
-		</form><br>
-
-<form action='".$_SERVER['PHP_SELF']."' method='post' name='Transfer'>
-		<div>
-			<span>Enter the account to transfer the amount to: </span>
-			<span><input type='number' name='account' required> </span>
-			<br>
-		</div>
-		<div>
-			<span>Enter the amount to transfer: </span>
-			<span><input type='number' name='amount' required></span>
-			<br>
-		</div>
-		<input type='submit' name='submit1' value='Transfer'>
-	</form>
-";
+	echo "<div style='margin-top:40px;'>Welcome ". $username ."</div>";
+	echo "<div class='content' id='dropdown'>
+         	<form action='upload_final.php' method='post' enctype='multipart/form-data'>
+				<label for='file'>Filename:</label>
+				<input type=\"file\" name=\"file\" id=\"file\">
+				<input type='submit' name='submit' value='Submit'>
+			</form>
+			<br>";
 
 		$query = "SELECT * FROM upfiles WHERE User = '$_SESSION[username]'";
 		$result = mysqli_query($conn,$query);
@@ -100,13 +84,28 @@ if(isset($_SESSION['username']))
 					echo $doc->saveHTML();
 				}
 		}
+		echo "</div>";
+
+		echo "<div class='content active' id='transaction'><form action='".$_SERVER['PHP_SELF']."' method='post' name='Transfer'>
+		<div>
+			<span>Enter the account to transfer the amount to: </span>
+			<span><input type='number' name='account' required> </span>
+			<br>
+		</div>
+		<div>
+			<span>Enter the amount to transfer: </span>
+			<span><input type='number' name='amount' required></span>
+			<br>
+		</div>
+		<input type='submit' name='submit1' value='Transfer'>
+	</form></div>";
 		echo "
-<br>
+<br><div class='content' id='resetp'>
 	<div style='font-size:18px;''>Reset Password</div>
 	<form action = 'reset_pass.php' method='post'>
 	Old Password: <input type='password' name='oldpass' required>
 	New Password: <input type='password' name='newpass' required>
-	<input type='submit'></form>";
+	<input type='submit'></form></div>";
 }
 
 
@@ -130,16 +129,12 @@ if(isset($_POST['submit1'])) //submitted request for transferring money
 				$sql = "UPDATE register SET balance=$transbal WHERE account = '$account'";
 				$result= mysqli_query($conn, $sql);
 				echo "ho gaya";
-
 			}
-
 		}
 		else
 		{
 			echo"Oops No user with that account found";
 		}
-		
-
 	}
 	else
 	{
@@ -156,6 +151,34 @@ if(isset($_SESSION['username'])) //for logout
 }
 mysqli_close($conn);
 ?>
+<script type="text/javascript">
+	document.getElementById("tab2").onclick = function(){
+		document.getElementById("tab1").className = "tab";
+		document.getElementById("tab2").className = "tab active";
+		document.getElementById("tab3").className = "tab";
 
+		document.getElementById("dropdown").className = "content active";
+		document.getElementById("resetp").className = "content";
+		document.getElementById("transaction").className = "content";
+	}
+	document.getElementById("tab1").onclick = function(){
+		document.getElementById("tab2").className = "tab";
+		document.getElementById("tab1").className = "tab active";
+		document.getElementById("tab3").className = "tab";
+
+		document.getElementById("dropdown").className = "content";
+		document.getElementById("resetp").className = "content";
+		document.getElementById("transaction").className = "content active";
+	}
+	document.getElementById("tab3").onclick = function(){
+		document.getElementById("tab1").className = "tab";
+		document.getElementById("tab3").className = "tab active";
+		document.getElementById("tab2").className = "tab";
+
+		document.getElementById("dropdown").className = "content";
+		document.getElementById("resetp").className = "content active";
+		document.getElementById("transaction").className = "content";
+	}
+</script>
 </body>
 </html>
