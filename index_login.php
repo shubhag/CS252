@@ -3,8 +3,14 @@
 <title>LOGIN</title>
 </head>
 
-
 <body>
+
+<?php
+	session_start();
+	if(isset($_SESSION['username'])){
+		header("location:login.php");
+	}
+?>
 	<h1 style="margin-left:20%">Welcome to Hawa Hawai Bank</h1>
 	<center>
 	<form action = "login.php" method="post">
