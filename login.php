@@ -36,12 +36,7 @@ else{
 				if (MD5($_POST['password']) == $password)
 				{
 					echo "LOGGED IN";
-					session_start();
 					$_SESSION['username'] = $username;
-			
-
-					//session_destroy();
-				//	unset($SESSION['username']);
 				}
 				else {echo "Incorrect password";}
 				echo "<br>";
@@ -50,8 +45,6 @@ else{
 		}
 	}
 }
-
-
 
 ?>
 
@@ -72,13 +65,11 @@ if(isset($_SESSION['username']))
 	echo "Session set";
 	echo "
 <form action='upload_final.php' method='post'
-enctype='multipart/form-data'>
-<label for='file'>Filename:</label>
-<input type=\"file\" name=\"file\" id=\"file\"><br>
-<input type='text' name='username' value='".$_SESSION['username']."' readonly>
-<input type='submit' name='submit' value='Submit'>
-</form><br>
-<br>
+		enctype='multipart/form-data'>
+		<label for='file'>Filename:</label>
+		<input type=\"file\" name=\"file\" id=\"file\">
+		<input type='submit' name='submit' value='Submit'>
+		</form><br>
 
 <form action='".$_SERVER['PHP_SELF']."' method='post' name='Transfer'>
 		<div>
@@ -94,8 +85,26 @@ enctype='multipart/form-data'>
 		<input type='submit' name='submit1' value='Transfer'>
 	</form>
 ";
-}
 
+		$query = "SELECT * FROM upfiles WHERE User = '$_SESSION[username]'";
+		$result = mysqli_query($conn,$query);
+		while($row = mysqli_fetch_array($result))
+		{
+				if($row['IsSaved'] == True)
+				{
+					$doc = new DOMDocument();
+					$doc->loadHTML("<a href=\"fetch_file.php?file=". $row['ModifiedFilename'] ."\">". $row['OriginalFilename'] ."</a><br><br>");
+					echo $doc->saveHTML();
+				}
+		}
+		echo "
+<br>
+	<div style='font-size:18px;''>Reset Password</div>
+	<form action = 'reset_pass.php' method='post'>
+	Old Password: <input type='password' name='oldpass' required>
+	New Password: <input type='password' name='newpass' required>
+	<input type='submit'></form>";
+}
 
 
 if(isset($_POST['submit1'])) //submitted request for transferring money
@@ -119,7 +128,6 @@ if(isset($_SESSION['username'])) //for logout
 }
 mysqli_close($conn);
 ?>
-
 
 </body>
 </html>
