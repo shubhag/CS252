@@ -21,6 +21,7 @@ function getCookie(cname) {
     }
     return "";
 }
+</script>
 
 Hello There.<br>
 

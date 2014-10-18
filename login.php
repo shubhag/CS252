@@ -38,6 +38,8 @@ else{
 					echo "LOGGED IN";
 					session_start();
 					$_SESSION['username'] = $username;
+			
+
 					//session_destroy();
 				//	unset($SESSION['username']);
 				}
@@ -50,7 +52,7 @@ else{
 }
 
 
-mysqli_close($conn);
+
 ?>
 
 
@@ -58,6 +60,15 @@ mysqli_close($conn);
 <?php
 if(isset($_SESSION['username']))
 {
+	$username = $_SESSION['username'];
+	//also retrieving the balance and account number
+	$sql = "SELECT * FROM register WHERE username = '$username'";
+	$result= mysqli_query($conn, $sql);
+	$row = mysqli_fetch_array($result);
+	$account = $row['account']; echo $account. "<br>";
+	$balance = $row['balance']; echo $balance. "<br>";
+
+	echo $_SESSION['username'];
 	echo "Session set";
 	echo "
 <form action='upload_final.php' method='post'
@@ -67,9 +78,46 @@ enctype='multipart/form-data'>
 <input type='text' name='username' value='".$_SESSION['username']."' readonly>
 <input type='submit' name='submit' value='Submit'>
 </form><br>
-<a href='logout.php'>Logout</a>";
+<br>
 
+<form action='".$_SERVER['PHP_SELF']."' method='post' name='Transfer'>
+		<div>
+			<span>Enter the account to transfer the amount to: </span>
+			<span><input type='number' name='accountno' required> </span>
+			<br>
+		</div>
+		<div>
+			<span>Enter the amount to transfer: </span>
+			<span><input type='number' name='amount' required></span>
+			<br>
+		</div>
+		<input type='submit' name='submit1' value='Transfer'>
+	</form>
+";
 }
+
+
+
+if(isset($_POST['submit1'])) //submitted request for transferring money
+{
+	if(is_numeric($_POST['amount']))
+	{
+		echo "yes it is";
+	}
+
+	echo $_POST['amount'] ."transferred to account no". $_POST['accountno'];
+	unset($_POST['submit1']);
+}
+
+
+
+
+
+if(isset($_SESSION['username'])) //for logout
+{
+	echo "<br><br><a href='logout.php'>Logout</a>";
+}
+mysqli_close($conn);
 ?>
 
 
