@@ -36,10 +36,10 @@ else {
 		if( ($username == "" || $password == "" || $email == "" ))
 		{
 			echo "Please enter all fields";
-			echo "Go to <a href='registeration.html'>Sign up</a>" ; 
+			echo "Go to <a href='registration.html'>Sign up</a>" ; 
 		}
 		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-		   	echo "Invalid Email Address<br> Go back to <a href='registeration.html' >signup page</a>";
+		   	echo "Invalid Email Address<br> Go back to <a href='registration.html' >signup page</a>";
 		}
 		else{
 
