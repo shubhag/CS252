@@ -43,7 +43,7 @@ else
 				$newpass = MD5($password);
 				$sql = "UPDATE register SET password='$newpass' WHERE username='$username'";
 				$result = mysqli_query($conn, $sql);
-				echo "Passwrd updated succussfully. Go to <a href='/login.html'> Login page </a> to reuse our services";
+				echo "Passwrd updated succussfully. Go to <a href='index_login.php'> Login page </a> to reuse our services";
 			}
 			else
 			{

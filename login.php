@@ -13,43 +13,42 @@ if(mysqli_connect_errno())
 {
 	echo "Failed to connect to mysql" . "mysql_connect_error()";
 }
-$username = mysqli_real_escape_string($conn, $_POST['username']);
-//echo gettype($username);
+else{
+	session_start();
+	if(!isset($_SESSION['username'])){
+		if( ($_POST['username'] == "" || $_POST['password'] == ""))
+		{
+		//	header('Location: index_login.php');
+			echo "Please enter all field";
+			echo "Go to <a href='index_login.php'>Login Page</a>" ; 
+		}
+		else{
+			$username = mysqli_real_escape_string($conn, $_POST['username']);
 
-$sql = "SELECT * FROM register WHERE username = '$username'";
+			$sql = "SELECT * FROM register WHERE username = '$username'";
 
-$result= mysqli_query($conn, $sql);
+			$result= mysqli_query($conn, $sql);
 
-if($row = mysqli_fetch_array($result))
-{
-//	echo $row['username'];
-	$password = $row['password'];
-	if (MD5($_POST['password']) == $password)
-	{
-		echo "LOGGED IN";
-		session_start();
-		$_SESSION['username'] = $username;
-		//session_destroy();
-	//	unset($SESSION['username']);
+			if($row = mysqli_fetch_array($result))
+			{
+			//	echo $row['username'];
+				$password = $row['password'];
+				if (MD5($_POST['password']) == $password)
+				{
+					echo "LOGGED IN";
+					session_start();
+					$_SESSION['username'] = $username;
+					//session_destroy();
+				//	unset($SESSION['username']);
+				}
+				else {echo "Incorrect password";}
+				echo "<br>";
+			}
+			else{echo "username does not exists";}
+		}
 	}
-	else {echo "Incorrect password";}
-	echo "<br>";
-}
-else{echo "username does not exists";}
-
-
-/*
-$flag = 0;
-if ($row = mysqli_fetch_array($result))
-{
-	$flag = 1;
 }
 
-if ($flag == 0)
-{
-	echo "User already exists. Choose different username";
-}
-*/
 
 mysqli_close($conn);
 ?>
@@ -61,13 +60,14 @@ if(isset($_SESSION['username']))
 {
 	echo "Session set";
 	echo "
-<form action='upload.php' method='post'
+<form action='upload_final.php' method='post'
 enctype='multipart/form-data'>
 <label for='file'>Filename:</label>
-<input type='file' name='file' id='file'><br>
-<input type='text' name='username' value='$username' readonly>
+<input type=\"file\" name=\"file\" id=\"file\"><br>
+<input type='text' name='username' value='".$_SESSION['username']."' readonly>
 <input type='submit' name='submit' value='Submit'>
-</form>";
+</form><br>
+<a href='logout.php'>Logout</a>";
 
 }
 ?>

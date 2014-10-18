@@ -1,27 +1,28 @@
 <?php
-$allowedExts = array("gif", "jpeg", "jpg", "png","pdf");
-$temp = explode(".", $_FILES["file"]["name"]);
-$extension = end($temp);
-echo $_POST['username'];
 
-$date= new DateTime();
-$datu=$date->format('Y-m-d H:i:s');
+  $allowedExts = array("gif", "jpeg", "jpg", "png","pdf");
+  $temp = explode(".", $_FILES["file"]["name"]);
+  $extension = end($temp);
+  echo $_POST['username'];
+
+  $date= new DateTime();
+  $datu=$date->format('Y-m-d H:i:s');
 
 
-$flag = 0;
-$checkstr = (string)$_POST['username'] . " " . $_FILES["file"]["name"];
-echo $checkstr . "<br><br><br>";
+  $flag = 0;
+  $checkstr = (string)$_POST['username'] . " " . $_FILES["file"]["name"];
+  echo $checkstr . "<br><br><br>";
 
-if($handle = opendir('./upload'))
-{
-	while (false !== ($entry = readdir($handle)))
-	if ($entry == $checkstr)
-	{
-		$flag = 1;
-		echo "Same file exist. Renaming and saving";
-	}
+  if($handle = opendir('./upload'))
+  {
+  	while (false !== ($entry = readdir($handle)))
+  	if ($entry == $checkstr)
+  	{
+  		$flag = 1;
+  		echo "Same file exist. Renaming and saving";
+  	}
 
-}
+  }
 
 
 
