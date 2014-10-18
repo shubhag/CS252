@@ -52,9 +52,11 @@ if(isset($_SESSION['username']))
 	$sql = "SELECT * FROM register WHERE username = '$username'";
 
 	echo "<div class='tabs'>
-          <a href='#' id='tab1' class='tab active'>Details</a>
-          <a href='#' id='tab2' class='tab'>Dropdown</a>
-          <a href='#' id='tab3' class='tab'>Reset Password</a></div>" ;
+          <a href='#' id='tab1' class='tab active'>Transfer Money</a>
+          <a href='#' id='tab2' class='tab'>DropBox</a>
+          <a href='#' id='tab4' class='tab'>Mini Statement</a>
+          <a href='#' id='tab3' class='tab'>Reset Password</a></div>
+          <a href='#' id='tab5' class='tab'>Other User Details</a></div>" ;
 		$result= mysqli_query($conn, $sql);
 		$row = mysqli_fetch_array($result);
 		$usraccount = $row['account']; 
@@ -87,7 +89,7 @@ if(isset($_SESSION['username']))
 		echo "<div class='content active' id='transaction'>
 			<form action='".$_SERVER['PHP_SELF']."' method='post' name='Transfer'>
 				<div>
-					<span>Enter the account to transfer the amount to: </span>
+					<span>Enter the account number(as given on Other User Details tab) of user to transfer the amount to: </span>
 					<span><input type='number' name='account' required> </span>
 					<br>
 				</div>
@@ -119,12 +121,55 @@ if(isset($_SESSION['username']))
 			</form>
 	</div>";
 		echo "
-<br><div class='content' id='resetp'>
-	<div style='font-size:18px;''>Reset Password</div>
-	<form action = 'reset_pass.php' method='post'>
-	Old Password: <input type='password' name='oldpass' required>
-	New Password: <input type='password' name='newpass' required>
-	<input type='submit'></form></div>";
+	<br><div class='content' id='resetp'>
+			<div style='font-size:18px;''>Reset Password</div>
+				<form action = 'reset_pass.php' method='post'>
+					Old Password: <input type='password' name='oldpass' required>
+					New Password: <input type='password' name='newpass' required>
+					<input type='submit'>
+				</form>
+			</div>";
+
+		$query = "SELECT * FROM minis WHERE user1 = '$username'";
+		$result = mysqli_query($conn,$query);
+		
+		echo "<div class='content' id='minis'>
+		<table class='gridtable'>
+			<tr>
+				<th>Transaction Type</th><th>Diposited/Withdrawl Money</th><th>Balance</th><th>Transaction Time</th> 
+			</tr>";
+		while($row = mysqli_fetch_array($result))
+		{
+			$a = 0;	
+			if($row['deposited']==NULL){
+				$a = $row['withdrawl'] ;
+			}
+			else if($row['withdrawl']==NULL){
+				$a = $row['deposited'] ;
+			}
+			if($row['transaction'] == 'Transfer'){
+				$a = $row['transfer'] ;
+			}
+			$doc = new DOMDocument();
+			$doc->loadHTML("<tr><td>".$row['transaction']."</td><td>".$a."</td><td>".$row['balance']."</td><td>".$row['Time']."</td></tr>");
+			echo $doc->saveHTML();
+		}
+		echo "</table></div>";
+
+		$query = "SELECT * FROM register WHERE username != '$username'";
+		$result = mysqli_query($conn,$query);
+		echo "<div class='content' id='other_udetail'>
+		<table class='gridtable'>
+			<tr>
+				<th>User Name</th><th>Email Id</th><th>Account Number</th> 
+			</tr>";
+		while($row = mysqli_fetch_array($result))
+		{
+			$doc = new DOMDocument();
+			$doc->loadHTML("<tr><td>".$row['username']."</td><td>".$row['email']."</td><td>".$row['account']."</td></tr>");
+			echo $doc->saveHTML();
+		}
+		echo "</table></div>";
 }
 
 
@@ -156,7 +201,7 @@ if(isset($_POST['submit1'])) //submitted request for transferring money
 				$sql = "INSERT into minis (user1, user2, transaction, transfer, balance, Time) VALUES ('$user2', '$user1', 'Transfer', '$amount', '$transbal', NOW())";
 				$result= mysqli_query($conn, $sql);
 
-				echo "ho gaya";
+				echo "Money transferred";
 			}
 		}
 		else
@@ -171,6 +216,30 @@ if(isset($_POST['submit1'])) //submitted request for transferring money
 
 	
 	unset($_POST['submit1']);
+	$query = "SELECT * FROM minis WHERE user1 = '$username'";
+		$result = mysqli_query($conn,$query);
+	echo "<div class='content' id='minis'>
+		<table class='gridtable'>
+			<tr>
+				<th>Transaction Type</th><th>Diposited/Withdrawl Money</th><th>Balance</th><th>Transaction Time</th> 
+			</tr>";
+		while($row = mysqli_fetch_array($result))
+		{
+			$a = 0;	
+			if($row['deposited']==NULL){
+				$a = $row['withdrawl'] ;
+			}
+			else if($row['withdrawl']==NULL){
+				$a = $row['deposited'] ;
+			}
+			if($row['transaction'] == 'Transfer'){
+				$a = $row['transfer'] ;
+			}
+			$doc = new DOMDocument();
+			$doc->loadHTML("<tr><td>".$row['transaction']."</td><td>".$a."</td><td>".$row['balance']."</td><td>".$row['Time']."</td></tr>");
+			echo $doc->saveHTML();
+		}
+		echo "</table></div>";
 }
 
 if(isset($_POST['submit2']))
@@ -199,6 +268,30 @@ if(isset($_POST['submit2']))
 		echo "Please enter valid amount";
 	}
 	unset($_POST['submit2']);
+	$query = "SELECT * FROM minis WHERE user1 = '$username'";
+		$result = mysqli_query($conn,$query);
+	echo "<div class='content' id='minis'>
+		<table class='gridtable'>
+			<tr>
+				<th>Transaction Type</th><th>Diposited/Withdrawl Money</th><th>Balance</th><th>Transaction Time</th> 
+			</tr>";
+		while($row = mysqli_fetch_array($result))
+		{
+			$a = 0;	
+			if($row['deposited']==NULL){
+				$a = $row['withdrawl'] ;
+			}
+			else if($row['withdrawl']==NULL){
+				$a = $row['deposited'] ;
+			}
+			if($row['transaction'] == 'Transfer'){
+				$a = $row['transfer'] ;
+			}
+			$doc = new DOMDocument();
+			$doc->loadHTML("<tr><td>".$row['transaction']."</td><td>".$a."</td><td>".$row['balance']."</td><td>".$row['Time']."</td></tr>");
+			echo $doc->saveHTML();
+		}
+		echo "</table></div>";
 }
 
 if(isset($_POST['submit3']))
@@ -227,7 +320,33 @@ if(isset($_POST['submit3']))
 		echo "Please enter valid amount<br>";
 	}
 	unset($_POST['submit3']);
+	$query = "SELECT * FROM minis WHERE user1 = '$username'";
+		$result = mysqli_query($conn,$query);
+	echo "<div class='content' id='minis'>
+		<table class='gridtable'>
+			<tr>
+				<th>Transaction Type</th><th>Diposited/Withdrawl Money</th><th>Balance</th><th>Transaction Time</th> 
+			</tr>";
+		while($row = mysqli_fetch_array($result))
+		{
+			$a = 0;	
+			if($row['deposited']==NULL){
+				$a = $row['withdrawl'] ;
+			}
+			else if($row['withdrawl']==NULL){
+				$a = $row['deposited'] ;
+			}
+			else {
+				$a = $row['transfer'] ;
+			}
+			$doc = new DOMDocument();
+			$doc->loadHTML("<tr><td>".$row['transaction']."</td><td>".$a."</td><td>".$row['balance']."</td><td>".$row['Time']."</td></tr>");
+			echo $doc->saveHTML();
+		}
+		echo "</table></div>";
 }
+
+
 
 if(isset($_SESSION['username'])) //for logout
 {
@@ -240,29 +359,68 @@ mysqli_close($conn);
 		document.getElementById("tab1").className = "tab";
 		document.getElementById("tab2").className = "tab active";
 		document.getElementById("tab3").className = "tab";
+		document.getElementById("tab4").className = "tab";
+		document.getElementById("tab5").className = "tab";
 
 		document.getElementById("dropdown").className = "content active";
 		document.getElementById("resetp").className = "content";
 		document.getElementById("transaction").className = "content";
+		document.getElementById("minis").className = "content";
+		document.getElementById("other_udetail").className = "content";
 	}
 	document.getElementById("tab1").onclick = function(){
 		document.getElementById("tab2").className = "tab";
 		document.getElementById("tab1").className = "tab active";
 		document.getElementById("tab3").className = "tab";
+		document.getElementById("tab4").className = "tab";
+		document.getElementById("tab5").className = "tab";
 
 		document.getElementById("dropdown").className = "content";
 		document.getElementById("resetp").className = "content";
 		document.getElementById("transaction").className = "content active";
+		document.getElementById("minis").className = "content";
+		document.getElementById("other_udetail").className = "content";
 	}
 	document.getElementById("tab3").onclick = function(){
 		document.getElementById("tab1").className = "tab";
 		document.getElementById("tab3").className = "tab active";
 		document.getElementById("tab2").className = "tab";
+		document.getElementById("tab4").className = "tab";
+				document.getElementById("tab5").className = "tab";
 
 		document.getElementById("dropdown").className = "content";
 		document.getElementById("resetp").className = "content active";
 		document.getElementById("transaction").className = "content";
+		document.getElementById("minis").className = "content";
+		document.getElementById("other_udetail").className = "content";
 	}
+	document.getElementById("tab4").onclick = function(){
+		document.getElementById("tab1").className = "tab";
+		document.getElementById("tab4").className = "tab active";
+		document.getElementById("tab2").className = "tab";
+		document.getElementById("tab3").className = "tab";
+		document.getElementById("tab5").className = "tab";
+
+		document.getElementById("dropdown").className = "content";
+		document.getElementById("resetp").className = "content";
+		document.getElementById("transaction").className = "content";
+		document.getElementById("minis").className = "content active";
+		document.getElementById("other_udetail").className = "content";
+	}
+	document.getElementById("tab5").onclick = function(){
+		document.getElementById("tab1").className = "tab";
+		document.getElementById("tab5").className = "tab active";
+		document.getElementById("tab2").className = "tab";
+		document.getElementById("tab3").className = "tab";
+		document.getElementById("tab4").className = "tab";
+
+		document.getElementById("dropdown").className = "content";
+		document.getElementById("resetp").className = "content";
+		document.getElementById("transaction").className = "content";
+		document.getElementById("minis").className = "content";
+		document.getElementById("other_udetail").className = "content active";
+	}
+
 </script>
 </body>
 </html>
