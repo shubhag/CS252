@@ -5,7 +5,7 @@
 		echo "Failed to connect to mysql" . "mysql_connect_error()";
 	}
 	$file = basename(urldecode($_GET['file']));
-	$fileDir = '/var/www/html/lab/upload/';
+	$fileDir = '/var/www/html/upload/';
 	$filepath = $fileDir . $file;
 	session_start();
 	if(!isset($_SESSION['username']))

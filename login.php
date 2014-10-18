@@ -58,8 +58,8 @@ if(isset($_SESSION['username']))
 	$sql = "SELECT * FROM register WHERE username = '$username'";
 	$result= mysqli_query($conn, $sql);
 	$row = mysqli_fetch_array($result);
-	$account = $row['account']; echo $account. "<br>";
-	$balance = $row['balance']; echo $balance. "<br>";
+	$usraccount = $row['account']; echo $usraccount. "<br>";
+	$usrbalance = $row['balance']; echo $usrbalance. "<br>";
 
 	echo $_SESSION['username'];
 	echo "Session set";
@@ -74,7 +74,7 @@ if(isset($_SESSION['username']))
 <form action='".$_SERVER['PHP_SELF']."' method='post' name='Transfer'>
 		<div>
 			<span>Enter the account to transfer the amount to: </span>
-			<span><input type='number' name='accountno' required> </span>
+			<span><input type='number' name='account' required> </span>
 			<br>
 		</div>
 		<div>
@@ -109,12 +109,41 @@ if(isset($_SESSION['username']))
 
 if(isset($_POST['submit1'])) //submitted request for transferring money
 {
-	if(is_numeric($_POST['amount']))
+	if(is_numeric($_POST['amount']) && is_numeric($_POST['account'])) // && intval($_POST['account'])>0 && intval($_POST['amount'])>0)
 	{
-		echo "yes it is";
+		$account = $_POST['account'];
+		$amount = $_POST['amount'];
+		$sql = "SELECT * FROM register WHERE account = '$account'";
+		$result= mysqli_query($conn, $sql);
+		if($row = mysqli_fetch_array($result))
+		{
+			//account exists
+			$newbal = $usrbalance - $amount;
+			if($newbal >0)
+			{
+				$sql = "UPDATE register SET balance=$newbal WHERE account = '$usraccount'";
+				$result= mysqli_query($conn, $sql);
+				$transbal = $amount + $row['balance'];
+				$sql = "UPDATE register SET balance=$transbal WHERE account = '$account'";
+				$result= mysqli_query($conn, $sql);
+				echo "ho gaya";
+
+			}
+
+		}
+		else
+		{
+			echo"Oops No user with that account found";
+		}
+		
+
+	}
+	else
+	{
+		echo "Please Enter valid Amount and Account Number";
 	}
 
-	echo $_POST['amount'] ."transferred to account no". $_POST['accountno'];
+	
 	unset($_POST['submit1']);
 }
 
