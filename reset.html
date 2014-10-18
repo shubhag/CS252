@@ -1,17 +1,25 @@
 <!DOCTYPE html>
 <head>
-<title>Forgot Password</title>
+	<title>Forgot Password</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 
 <body>
-	<h1 style="margin-left:20%">Reset Password</h1>
-	<form action = "reset.php" method="post">
-	Username: <input type="text" name="username" required>
-	<input type="submit"></form>
+	<h1><center>Reset Password</center></h1>
+	<div class="container">
 
+			<form action = "reset.php" method="post" class="form-signin" role="form">
+			<input type="text" class="form-control" name="username" placeholder="User Name" required="" autofocus="">
+<!-- 			Username: <input type="text" name="username" required> -->
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Reset Password</button>
+<!-- 			<input type="submit"></form> -->
+		</form>
+	</div>
 	<p>
+		<center>
 		Already have an account. Click Here to <a href="index_login.php">Login</a>
+		</center>
 	</p>
 </body>
 </html>

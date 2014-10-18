@@ -11,5 +11,5 @@ withdrawl INT(20),
 transfer INT(20),
 balance INT(20) NOT NULL,
 Time Timestamp NOT NULL,
-PRIMARY KEY (Time)
+PRIMARY KEY (Time,user1)
 );

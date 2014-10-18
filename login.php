@@ -2,6 +2,9 @@
 
 <head>
 <title>Welcome</title>
+<style type="text/css">
+
+</style>
 </head>
 
 
@@ -59,7 +62,7 @@ if(isset($_SESSION['username']))
 	$usrbalance = $row['balance']; echo $usrbalance. "<br>";
 
 	echo $_SESSION['username'];
-	echo "Session set";
+	echo "Welcome";
 	echo "
 <form action='upload_final.php' method='post'
 		enctype='multipart/form-data'>
@@ -147,6 +150,8 @@ if(isset($_POST['submit1'])) //submitted request for transferring money
 				$user1 = $_SESSION['username'];
 				$sql = "INSERT into minis (user1, user2, transaction, transfer, balance, Time) VALUES ('$user1', '$user2', 'Transfer', '$amount', '$newbal', NOW())";
 				$result= mysqli_query($conn, $sql);
+				$sql = "INSERT into minis (user1, user2, transaction, transfer, balance, Time) VALUES ('$user2', '$user1', 'Transfer', '$amount', '$transbal', NOW())";
+				$result= mysqli_query($conn, $sql);
 
 				echo "ho gaya";
 
@@ -224,9 +229,6 @@ if(isset($_POST['submit3']))
 	}
 	unset($_POST['submit3']);
 }
-
-
-
 
 if(isset($_SESSION['username'])) //for logout
 {

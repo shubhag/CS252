@@ -3,11 +3,7 @@
 <title>Reset Password</title>
 </head>
 
-
 <body>
-
-
-
 <?php
    
 $conn = mysqli_connect("localhost", "root", "root", "test");
@@ -26,8 +22,6 @@ else
 
 	if($password == $password1)
 	{
-	//echo $username;
-
 		$sql = "SELECT * FROM register WHERE username = '$username'";
 
 		$result= mysqli_query($conn, $sql);
@@ -62,10 +56,6 @@ else
 
 	mysqli_close($conn);
 }
-
-
-
-
 ?>
 
 

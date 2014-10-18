@@ -36,9 +36,9 @@
 					
 
 			      		move_uploaded_file($_FILES["file"]["tmp_name"],
-		      			"/var/www/html/upload/" . $_SESSION['username']."_" .$name . "_" . date_format($date, 'U') . "." . $extension);
+		      			"/var/www/html/lab/upload/" . $_SESSION['username']."_" .$name . "_" . date_format($date, 'U') . "." . $extension);
 					echo "File Uploaded<br>";	      			
-					chmod("/var/www/html/upload/". $_FILES["file"]["name"], 0644);
+					chmod("/var/www/html/lab/upload/". $_FILES["file"]["name"], 0644);
 				}
 			}
 			else

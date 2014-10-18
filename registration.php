@@ -23,7 +23,6 @@ function getCookie(cname) {
 }
 </script>
 
-
 <?php 
 $conn = mysqli_connect("localhost", "root", "root", "test");
 if (mysqli_connect_errno())
@@ -31,31 +30,36 @@ if (mysqli_connect_errno())
 	echo "Failed connection" . mysqli_connect_error();
 }
 else {
-	echo "Connection Established with database<br>";
-
 		$username= mysqli_real_escape_string($conn, $_POST['username']);
 		$password = $_POST['password'];
 		$email = $_POST['email'];
-
-
-		$sql = "SELECT username FROM register WHERE username='$username'";
-		$result = mysqli_query($conn, $sql);
-
-
-		if(!($row = mysqli_fetch_array($result)))
+		if( ($username == "" || $password == "" || $email == "" ))
 		{
-			$sql = "INSERT INTO register (username, password, email)
-			VALUES('$username', MD5('$password'), '$email')";
+			echo "Please enter all fields";
+			echo "Go to <a href='registeration.html'>Sign up</a>" ; 
+		}
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		   	echo "Invalid Email Address<br> Go back to <a href='registeration.html' >signup page</a>";
+		}
+		else{
+			$sql = "SELECT username FROM register WHERE username='$username'";
+			$result = mysqli_query($conn, $sql);
 
-			if (mysqli_query($conn, $sql)){
-				echo "Registered";
+
+			if(!($row = mysqli_fetch_array($result)))
+			{
+				$sql = "INSERT INTO register (username, password, email)
+				VALUES('$username', MD5('$password'), '$email')";
+
+				if (mysqli_query($conn, $sql)){
+					echo "User Registered. <br> Go to <a href='index_login.php'>Login Page</a>";
+				}
+			}
+			else
+			{
+				echo "User already exists. Please try a different username";
 			}
 		}
-		else
-		{
-			echo "User already exists. Please try a different username";
-		}
-
 		mysqli_close($conn);
 	}
 ?>
