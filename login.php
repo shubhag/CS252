@@ -36,10 +36,8 @@ else{
 				if (MD5($_POST['password']) == $password)
 				{
 					echo "LOGGED IN";
-					session_start();
 					$_SESSION['username'] = $username;
-					//session_destroy();
-				//	unset($SESSION['username']);
+
 				}
 				else {echo "Incorrect password";}
 				echo "<br>";
@@ -50,7 +48,6 @@ else{
 }
 
 
-mysqli_close($conn);
 ?>
 
 
@@ -68,6 +65,25 @@ enctype='multipart/form-data'>
 <input type='submit' name='submit' value='Submit'>
 </form><br>
 <a href='logout.php'>Logout</a>";
+
+
+		$query = "SELECT * FROM upfiles WHERE User = '$_SESSION[username]'";
+		$result = mysqli_query($conn,$query);
+		while($row = mysqli_fetch_array($result))
+		{
+			// echo $row['ModifiedFilename'];
+			// $nrows =  mysqli_num_rows($result);
+			// echo $nrows;
+			// for( $i = 0; $i < $nrows; $i++)
+			// {
+				if($row['IsSaved'] == True)
+				{
+					$doc = new DOMDocument();
+					$doc->loadHTML("<a href=\"fetch_file.php?file=". $row['ModifiedFilename'] ."\">". $row['OriginalFilename'] ."</a><br><br>");
+					echo $doc->saveHTML();
+				}
+			// }
+		}
 
 }
 ?>

@@ -32,12 +32,12 @@
 			    		echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br>";
 					$date = date_create();
 
-					// $stmt = $mysqli->prepare("INSERT INTO files (Username, IsSaved, OriginalFilename, ModifiedFilename, Time) VALUE('$_SESSION[user]' , 'Yes','".  $_FILES["file"]["name"]."','". $_SESSION['user']."_" .$name . "_" . date_format($date, 'U') . "." . $extension . "', NOW())");
+					 $stmt = $mysqli->prepare("INSERT INTO upfiles (User, IsSaved, OriginalFilename, ModifiedFilename, Time) VALUE('$_SESSION[username]' , 'Yes','".  $_FILES["file"]["name"]."','". $_SESSION['username']."_" .$name . "_" . date_format($date, 'U') . "." . $extension . "', NOW())");
 					
-					// $stmt->execute();
+					 $stmt->execute();
 					
 
-			      move_uploaded_file($_FILES["file"]["tmp_name"],
+			      		move_uploaded_file($_FILES["file"]["tmp_name"],
 		      			"/var/www/html/lab/upload/" . $_SESSION['username']."_" .$name . "_" . date_format($date, 'U') . "." . $extension);
 					echo "File Uploaded<br>";	      			
 					chmod("/var/www/html/lab/upload/". $_FILES["file"]["name"], 0644);

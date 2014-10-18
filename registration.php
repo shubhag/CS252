@@ -21,8 +21,7 @@ function getCookie(cname) {
     }
     return "";
 }
-
-Hello There.<br>
+</script>
 
 <?php 
 $conn = mysqli_connect("localhost", "root", "root", "test");
