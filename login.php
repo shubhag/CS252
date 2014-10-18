@@ -24,11 +24,8 @@ else{
 		}
 		else{
 			$username = mysqli_real_escape_string($conn, $_POST['username']);
-
 			$sql = "SELECT * FROM register WHERE username = '$username'";
-
 			$result= mysqli_query($conn, $sql);
-
 			if($row = mysqli_fetch_array($result))
 			{
 			//	echo $row['username'];
@@ -83,6 +80,24 @@ if(isset($_SESSION['username']))
 			<br>
 		</div>
 		<input type='submit' name='submit1' value='Transfer'>
+	</form><br><br>
+
+<form action='".$_SERVER['PHP_SELF']."' method='post' name='Withdraw'>
+		<div>
+			<span>Enter the amount to Withdraw: </span>
+			<span><input type='number' name='amountwithdraw' required></span>
+			<br>
+		</div>
+		<input type='submit' name='submit2' value='Withdraw'>
+	</form>
+
+	<form action='".$_SERVER['PHP_SELF']."' method='post' name='Deposit'>
+		<div>
+			<span>Enter the amount to Deposit: </span>
+			<span><input type='number' name='amountdeposit' required></span>
+			<br>
+		</div>
+		<input type='submit' name='submit3' value='Deposit'>
 	</form>
 ";
 
@@ -109,7 +124,7 @@ if(isset($_SESSION['username']))
 
 if(isset($_POST['submit1'])) //submitted request for transferring money
 {
-	if(is_numeric($_POST['amount']) && is_numeric($_POST['account'])) // && intval($_POST['account'])>0 && intval($_POST['amount'])>0)
+	if(is_numeric($_POST['amount']) && is_numeric($_POST['account']) && intval($_POST['account'])>0 && intval($_POST['amount'])>0)
 	{
 		$account = $_POST['account'];
 		$amount = $_POST['amount'];
@@ -117,15 +132,22 @@ if(isset($_POST['submit1'])) //submitted request for transferring money
 		$result= mysqli_query($conn, $sql);
 		if($row = mysqli_fetch_array($result))
 		{
-			//account exists
+			$user2 = $row['username'];
 			$newbal = $usrbalance - $amount;
 			if($newbal >0)
 			{
 				$sql = "UPDATE register SET balance=$newbal WHERE account = '$usraccount'";
 				$result= mysqli_query($conn, $sql);
+
 				$transbal = $amount + $row['balance'];
 				$sql = "UPDATE register SET balance=$transbal WHERE account = '$account'";
 				$result= mysqli_query($conn, $sql);
+
+				//Updating Ministatement table
+				$user1 = $_SESSION['username'];
+				$sql = "INSERT into minis (user1, user2, transaction, transfer, balance, Time) VALUES ('$user1', '$user2', 'Transfer', '$amount', '$newbal', NOW())";
+				$result= mysqli_query($conn, $sql);
+
 				echo "ho gaya";
 
 			}
@@ -147,6 +169,61 @@ if(isset($_POST['submit1'])) //submitted request for transferring money
 	unset($_POST['submit1']);
 }
 
+if(isset($_POST['submit2']))
+{
+	if(is_numeric($_POST['amountwithdraw']) && intval($_POST['amountwithdraw']) >0)
+	{
+		if(($usrbalance -intval($_POST['amountwithdraw'])) >=0)
+		{
+			$newbal = $usrbalance - $_POST['amountwithdraw'];
+			$sql = "UPDATE register SET balance=$newbal WHERE account = '$usraccount'";
+			$result= mysqli_query($conn, $sql);
+			echo "Please collect your money from the cashier";
+
+			$user1 = $_SESSION['username'];
+			$amount = $_POST['amountwithdraw'];
+			$sql = "INSERT into minis (user1, transaction, withdrawl, balance, Time) VALUES ('$user1', 'Withdrawl', '$amount', '$newbal', NOW())";
+			$result= mysqli_query($conn, $sql);
+		}
+		else
+		{
+			echo "Sorry Unsufficient Balance<br>";
+		}
+	}
+	else
+	{
+		echo "Please enter valid amount";
+	}
+	unset($_POST['submit2']);
+}
+
+if(isset($_POST['submit3']))
+{
+	if(is_numeric($_POST['amountdeposit']) && intval($_POST['amountdeposit']) >0)
+	{
+		if(($usrbalance + intval($_POST['amountdeposit'])) <10000000)
+		{
+			$newbal = $usrbalance + $_POST['amountdeposit'];
+			$sql = "UPDATE register SET balance=$newbal WHERE account = '$usraccount'";
+			$result= mysqli_query($conn, $sql);
+			echo "Your Cash has been successfully deposited<br>";
+
+			$user1 = $_SESSION['username'];
+			$amount = $_POST['amountdeposit'];
+			$sql = "INSERT into minis (user1, transaction, withdrawl, balance, Time) VALUES ('$user1', 'Deposit', '$amount', '$newbal', NOW())";
+			$result= mysqli_query($conn, $sql);
+		}
+		else
+		{
+			echo "Amount deposit greater than Rs 10000000 only done at valid bank counter<br>";
+		}
+	}
+	else
+	{
+		echo "Please enter valid amount<br>";
+	}
+	unset($_POST['submit3']);
+}
 
 
 
