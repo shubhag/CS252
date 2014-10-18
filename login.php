@@ -57,37 +57,37 @@ if(isset($_SESSION['username']))
 {
 	echo "Session set";
 	echo "
-<form action='upload_final.php' method='post'
-enctype='multipart/form-data'>
-<label for='file'>Filename:</label>
-<input type=\"file\" name=\"file\" id=\"file\"><br>
-<input type='text' name='username' value='".$_SESSION['username']."' readonly>
-<input type='submit' name='submit' value='Submit'>
-</form><br>
-<a href='logout.php'>Logout</a>";
+		<form action='upload_final.php' method='post'
+		enctype='multipart/form-data'>
+		<label for='file'>Filename:</label>
+		<input type=\"file\" name=\"file\" id=\"file\">
+		<input type='submit' name='submit' value='Submit'>
+		</form><br>
+		";
 
 
 		$query = "SELECT * FROM upfiles WHERE User = '$_SESSION[username]'";
 		$result = mysqli_query($conn,$query);
 		while($row = mysqli_fetch_array($result))
 		{
-			// echo $row['ModifiedFilename'];
-			// $nrows =  mysqli_num_rows($result);
-			// echo $nrows;
-			// for( $i = 0; $i < $nrows; $i++)
-			// {
 				if($row['IsSaved'] == True)
 				{
 					$doc = new DOMDocument();
 					$doc->loadHTML("<a href=\"fetch_file.php?file=". $row['ModifiedFilename'] ."\">". $row['OriginalFilename'] ."</a><br><br>");
 					echo $doc->saveHTML();
 				}
-			// }
 		}
+		echo "
+<br>
+	<div style='font-size:18px;''>Reset Password</div>
+	<form action = 'reset_pass.php' method='post'>
+	Old Password: <input type='password' name='oldpass' required>
+	New Password: <input type='password' name='newpass' required>
+	<input type='submit'></form>
 
+		<br><a href='logout.php'>Logout</a";
 }
 ?>
-
-
+>
 </body>
 </html>
