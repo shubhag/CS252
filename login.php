@@ -2,6 +2,9 @@
 
 <head>
 <title>Welcome</title>
+<style type="text/css">
+
+</style>
 </head>
 
 
@@ -62,7 +65,7 @@ if(isset($_SESSION['username']))
 	$usrbalance = $row['balance']; echo $usrbalance. "<br>";
 
 	echo $_SESSION['username'];
-	echo "Session set";
+	echo "Welcome";
 	echo "
 <form action='upload_final.php' method='post'
 		enctype='multipart/form-data'>
@@ -146,10 +149,6 @@ if(isset($_POST['submit1'])) //submitted request for transferring money
 	
 	unset($_POST['submit1']);
 }
-
-
-
-
 
 if(isset($_SESSION['username'])) //for logout
 {
